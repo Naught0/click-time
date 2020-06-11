@@ -15,6 +15,67 @@ class Container extends React.Component {
     }
 }
 
+class ClickCounter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { counterName: 'Counter', counter: 0 }
+
+        this.updateCounterName = this.updateCounterName.bind(this);
+        this.addCounter = this.addCounter.bind(this);
+        this.subtractCounter = this.subtractCounter.bind(this);
+        this.resetCounter = this.resetCounter.bind(this);
+    }
+
+    updateCounterName(event) {
+        this.setState({ counterName: event.target.value })
+    }
+
+    addCounter() {
+        this.setState({ counter: this.state.counter + 1 });
+    }
+    subtractCounter() {
+        this.setState({ counter: this.state.counter - 1 });
+    }
+    resetCounter() {
+        this.setState({ counter: 0 });
+    }
+
+    render() {
+        return (
+            <Container>
+                <div className="field">
+                    <div className="control has-icons-left">
+                        <input type="text" className="input is-marginless " value={this.state.counterName} onChange={this.updateCounterName}>
+                        </input>
+                        <span className="icon is-left">
+                            <i className="fas fa-plus-circle"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div className="notification is-dark">
+                    <span className="subtitle">
+                        {this.state.counter}
+                    </span>
+                </div>
+
+                <div className="buttons">
+                    <button className="button is-light is-outlined" onClick={this.addCounter}>
+                        <span className="icon"><i className="fas fa-plus-circle"></i></span>
+                    </button>
+                    <button className="button is-light is-outlined" onClick={this.subtractCounter}>
+                        <span className="icon"><i className="fas fa-minus-circle"></i></span>
+                    </button>
+                    <button className="button is-danger" onClick={this.resetCounter}>
+                        <span className="icon"><i className="fas fa-trash"></i></span>
+                    </button>
+                </div>
+
+            </Container>
+        )
+    }
+}
+
 class StopWatch extends React.Component {
     constructor(props) {
         super(props);
@@ -108,11 +169,17 @@ class App extends React.Component {
         super(props);
         this.state = { items: [] };
         this.addStopwatch = this.addStopwatch.bind(this);
+        this.addCounter = this.addCounter.bind(this);
     }
 
     addStopwatch() {
         this.setState({
             items: this.state.items.concat(<StopWatch componentID={this.state.items.length}></StopWatch>)
+        })
+    }
+    addCounter() {
+        this.setState({
+            items: this.state.items.concat(<ClickCounter componentID={this.state.items.length}></ClickCounter>)
         })
     }
 
@@ -127,29 +194,29 @@ class App extends React.Component {
                                     <span className="icon"><i className="fas fa-mouse"></i></span>
                                     <span className="subtitle has-text-weight-light">ClickTime</span>
                                 </div>
-                                <div className="navbar-menu">
-                                    <div className="navbar-end">
-                                        <div className="navbar-item has-dropdown is-hoverable">
-                                            <a href="" className="navbar-link">
-                                                <span className="icon"><i className="fas fa-plus"></i></span>
-                                            </a>
+                            </div>
+                            <div className="navbar-menu">
+                                <div className="navbar-end">
+                                    <div className="navbar-item has-dropdown is-hoverable">
+                                        <a href="" className="navbar-link">
+                                            <span className="icon"><i className="fas fa-plus"></i></span>
+                                        </a>
 
-                                            <div className="navbar-dropdown has-background-dark">
-                                                <a href="" className="navbar-item">
-                                                    <span className="icon"><i className="fas fa-clock"></i></span>
-                                                    <span>Add timer</span>
-                                                </a>
-                                                <a onClick={this.addStopwatch} className="navbar-item">
-                                                    <span className="icon"><i className="fas fa-stopwatch"></i></span>
-                                                    <span>Add stopwatch</span>
-                                                </a>
-                                                <a href="" className="navbar-item">
-                                                    <span className="icon">
-                                                        <i className="fas fa-plus-circle"></i>
-                                                    </span>
-                                                    <span>Add counter</span>
-                                                </a>
-                                            </div>
+                                        <div className="navbar-dropdown is-right is-dark has-background-dark">
+                                            <a href="" className="navbar-item">
+                                                <span className="icon"><i className="fas fa-clock"></i></span>
+                                                <span>Add timer</span>
+                                            </a>
+                                            <a onClick={this.addStopwatch} className="navbar-item">
+                                                <span className="icon"><i className="fas fa-stopwatch"></i></span>
+                                                <span>Add stopwatch</span>
+                                            </a>
+                                            <a onClick={this.addCounter} className="navbar-item">
+                                                <span className="icon">
+                                                    <i className="fas fa-plus-circle"></i>
+                                                </span>
+                                                <span>Add counter</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
