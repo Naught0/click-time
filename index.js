@@ -185,53 +185,61 @@ class App extends React.Component {
 
     render() {
         return (
-            <section className="hero is-dark is-fullheight">
-                <div className="hero-head">
-                    <nav className="navbar is-dark">
-                        <div className="container">
-                            <div className="navbar-brand">
-                                <div className="navbar-item has-text-primary">
-                                    <span className="icon"><i className="fas fa-mouse"></i></span>
-                                    <span className="subtitle has-text-weight-light">ClickTime</span>
+            <React.Fragment>
+                <section className="hero is-dark is-fullheight">
+                    <div className="hero-head">
+                        <nav className="navbar is-dark">
+                            <div className="container">
+                                <div className="navbar-brand">
+                                    <div className="navbar-item has-text-primary">
+                                        <span className="icon"><i className="fas fa-mouse"></i></span>
+                                        <span className="subtitle has-text-weight-light">clicktime</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="navbar-menu">
-                                <div className="navbar-end">
-                                    <div className="navbar-item has-dropdown is-hoverable">
-                                        <a href="" className="navbar-link">
-                                            <span className="icon"><i className="fas fa-plus"></i></span>
-                                        </a>
+                                <div className="navbar-menu">
+                                    <div className="navbar-end">
+                                        <div className="navbar-item has-dropdown is-hoverable">
+                                            <a href="" className="navbar-link">
+                                                <span className="icon"><i className="fas fa-plus"></i></span>
+                                            </a>
 
-                                        <div className="navbar-dropdown is-right is-dark has-background-dark">
-                                            <a href="" className="navbar-item">
-                                                <span className="icon"><i className="fas fa-clock"></i></span>
-                                                <span>Add timer</span>
-                                            </a>
-                                            <a onClick={this.addStopwatch} className="navbar-item">
-                                                <span className="icon"><i className="fas fa-stopwatch"></i></span>
-                                                <span>Add stopwatch</span>
-                                            </a>
-                                            <a onClick={this.addCounter} className="navbar-item">
-                                                <span className="icon">
-                                                    <i className="fas fa-plus-circle"></i>
-                                                </span>
-                                                <span>Add counter</span>
-                                            </a>
+                                            <div className="navbar-dropdown is-right is-dark has-background-dark">
+                                                <a href="" className="navbar-item">
+                                                    <span className="icon"><i className="fas fa-clock"></i></span>
+                                                    <span>Add timer</span>
+                                                </a>
+                                                <a onClick={this.addStopwatch} className="navbar-item">
+                                                    <span className="icon"><i className="fas fa-stopwatch"></i></span>
+                                                    <span>Add stopwatch</span>
+                                                </a>
+                                                <a onClick={this.addCounter} className="navbar-item">
+                                                    <span className="icon">
+                                                        <i className="fas fa-plus-circle"></i>
+                                                    </span>
+                                                    <span>Add counter</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </nav>
-                </div>
-                <div className="hero-body">
-                    <div className="container">
-                        <div className="columns is-multiline">
-                            {this.state.items}
+                        </nav>
+                    </div>
+                    <div className="hero-body">
+                        <div className="container">
+                            <div className="columns is-multiline">
+                                {this.state.items}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section >
+                </section >
+                <footer className="footer has-text-centered has-text-grey has-background-black">
+                    <div className="container content">
+                        <p>made with ☕️ by <a href="https://github.com/Naught0">james</a></p>
+                        <p className="help"><a href="http://soundbible.com/2197-Analog-Watch-Alarm.html">alarm sound</a> from daniel simion under attribution 3.0</p>
+                    </div>
+                </footer>
+            </React.Fragment>
         )
     }
 }
