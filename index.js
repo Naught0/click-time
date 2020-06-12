@@ -18,10 +18,11 @@ class Container extends React.Component {
 class Timer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { duration: 60 * 1000, startTime: null, elapsed: 0, prevElapsed: 0, timerName: 'Timer', ticking: false, id: props.componentID, almostDone: false, alerting: false };
+        this.state = { duration: 31 * 1000, startTime: null, elapsed: 0, prevElapsed: 0, timerName: 'Timer', ticking: false, id: props.componentID, almostDone: false, alerting: false, timerColor: "is-dark" };
         this.updateName = this.updateName.bind(this);
         this.start = this.start.bind(this);
         this.pause = this.pause.bind(this);
+        this.clear = this.clear.bind(this);
     }
 
     convertMS(milliseconds) {
@@ -42,23 +43,28 @@ class Timer extends React.Component {
     start() {
         if (this.state.startTime) return;
         if (this.state.ticking) return;
-        this.setState({ startTime: Date.now(), ticking: true })
-        this.timerID = setInterval(() => this.tick(), 100)
+        this.timerID = setInterval(() => this.tick(), 100);
+        this.setState({ startTime: Date.now(), ticking: true, almostDone: false, alerting: false, timerColor: "is-dark" })
     }
 
     pause() {
-        this.setState({ prevElapsed: elapsed, startTime: null });
+        clearInterval(this.timerID);
+        this.setState({ prevElapsed: elapsed, ticking: false, startTime: null });
         this.setState({ elapsed: 0 });
+    }
+    clear() {
+        clearInterval(this.timerID);
+        this.setState({ prevElapsed: 0, ticking: false, startTime: null, elapsed: 0, almostDone: false, alerting: false, timerColor: 'is-dark' });
     }
 
     tick() {
         this.setState({ elapsed: Date.now() - this.state.startTime });
         if (this.state.duration - this.state.elapsed < (30 * 1000)) {
-            this.setState({ almostDone: true })
+            this.setState({ almostDone: true, timerColor: "is-warning" })
         }
         if (this.state.duration == this.state.elapsed + this.state.prevElapsed || this.state.duration < this.state.elapsed + this.state.prevElapsed) {
             clearInterval(this.timerID);
-            this.setState({ almostDone: false, alerting: true });
+            this.setState({ almostDone: false, alerting: true, timerColor: "is-danger" });
         }
     }
 
@@ -73,18 +79,17 @@ class Timer extends React.Component {
                         </span>
                     </div>
                 </div>
-                <div className="notification is-dark">
-                    <input type="text" className="input is-transparent"/>
-                        {/* {this.convertMS(this.state.duration - this.state.prevElapsed - this.state.elapsed)} */}
+                <div className={"notification " + this.state.timerColor}>
+                    <span className="subtitle">{this.convertMS(this.state.duration - this.state.prevElapsed - this.state.elapsed)}</span>
                 </div>
                 <div className="buttons is-grouped">
                     <button onClick={this.start} className="button is-rounded is-success">
                         <span className="icon"><i className="fas fa-play"></i></span>
                     </button>
-                    <button className="button is-rounded is-warning">
+                    <button onClick={this.pause} className="button is-rounded is-warning">
                         <span className="icon"><i className="fas fa-pause"></i></span>
                     </button>
-                    <button className="button is-rounded is-outlined is-danger">
+                    <button onClick={this.clear} className="button is-rounded is-outlined is-danger">
                         <span className="icon"><i className="fas fa-trash"></i></span>
                     </button>
                 </div>
