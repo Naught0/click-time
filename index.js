@@ -13,6 +13,7 @@ class Container extends React.Component {
         }
         this.setState({ color: newColor, xColor: 'is-danger' });
     }
+
     render() {
         return (
             <div className="column is-one-third">
@@ -21,6 +22,7 @@ class Container extends React.Component {
                         <div className="level-left">
                             <p className="level-item"><a onClick={() => this.handleColor('is-link')}><i className="fas fa-circle has-text-link"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-info')}><i className="fas fa-circle has-text-info"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-success')}><i className="fas fa-circle has-text-success"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-danger')}><i className="fas fa-circle has-text-danger"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-warning')}><i className="fas fa-circle has-text-warning"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-black')}><i className="fas fa-circle has-text-black"></i></a></p>
@@ -46,11 +48,14 @@ class Container extends React.Component {
 class Timer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { duration: 5 * 60 * 1000, startTime: null, elapsed: 0, prevElapsed: 0, timerName: 'Timer', ticking: false, alerting: false, timerColor: "is-dark" };
+        this.state = { duration: 10 * 1000, startTime: null, elapsed: 0, prevElapsed: 0, timerName: 'Timer', ticking: false, alerting: false, timerColor: "is-dark", modalShow: false, hours: 0, minutes: 0, seconds: 0 };
         this.updateName = this.updateName.bind(this);
         this.start = this.start.bind(this);
         this.pause = this.pause.bind(this);
         this.clear = this.clear.bind(this);
+        this.editTime = this.editTime.bind(this);
+        this.showRemaining = this.showRemaining.bind(this);
+        this.showEdit = this.showEdit.bind(this);
     }
 
     convertMS(milliseconds) {
@@ -72,7 +77,7 @@ class Timer extends React.Component {
         if (this.state.startTime) return;
         if (this.state.ticking) return;
         this.timerID = setInterval(() => this.tick(), 100);
-        this.setState({ startTime: Date.now(), ticking: true, almostDone: false, alerting: false, timerColor: "is-dark" })
+        this.setState({ startTime: Date.now(), ticking: true, almostDone: false, alerting: false, timerColor: "is-dark", modalShow: false })
     }
 
     pause() {
@@ -89,13 +94,68 @@ class Timer extends React.Component {
         this.setState({ elapsed: Date.now() - this.state.startTime });
         if (this.state.duration == this.state.elapsed + this.state.prevElapsed || this.state.duration < this.state.elapsed + this.state.prevElapsed) {
             clearInterval(this.timerID);
-            this.setState({ almostDone: false, alerting: true, timerColor: "is-danger" });
+            this.setState({ almostDone: false, alerting: true, timerColor: "is-danger hvr-buzz", prevElapsed: 0, elapsed: this.state.duration });
         }
     }
 
-    render() {
+    editTime() {
+        if (this.state.ticking || this.state.prevElapsed > 0) return;
+        this.setState({ modalShow: !this.state.modalShow });
+    }
+
+    showRemaining() {
         return (
-            <Container onDelete={() => this.props.onDelete(this.props.id)}>
+            <span className="subtitle">{this.convertMS(this.state.duration - this.state.elapsed - this.state.prevElapsed)}</span>
+        )
+    }
+
+    showEdit() {
+        let totalMiliseconds,
+            hours,
+            minutes,
+            seconds;
+        const anyChange = () => {
+            this.setState({ duration: this.state.hours + this.state.minutes + this.state.seconds })
+        }
+        const hoursChange = (e) => {
+            hours = e.target.value * 60 * 60 * 1000;
+            this.setState({ hours: hours });
+            anyChange();
+        }
+        const minutesChange = (e) => {
+            minutes = e.target.value * 60 * 1000;
+            this.setState({ minutes: minutes });
+            anyChange();
+        }
+        const secondsChange = (e) => {
+            seconds = e.target.value * 1000;
+            this.setState({ seconds: seconds });
+            anyChange();
+        }
+        return (
+            <div className="container">
+                <p className="help">hours</p>
+                <input onChange={hoursChange} defaultValue="0" min="0" type="number" className="box is-size-6" />
+                <p className="help">minutes</p>
+                <input onChange={minutesChange} defaultValue="0" min="0" type="number" className="box is-size-6" />
+                <p className="help">seconds</p>
+                <input onChange={secondsChange} defaultValue="30" min="0" type="number" className="box is-size-6" />
+            </div>
+        )
+    }
+
+    render() {
+        let block;
+        if (this.state.modalShow === false) {
+            block = <this.showRemaining />
+        }
+        else {
+            block = <this.showEdit />
+        }
+
+        return (
+            <Container onDelete={() => this.props.onDelete(this.props.id)} >
+
                 <div className="field">
                     <div className="control has-icons-left">
                         <input type="text" className="input is-marginless" onChange={this.updateName} value={this.state.timerName} />
@@ -105,7 +165,22 @@ class Timer extends React.Component {
                     </div>
                 </div>
                 <div className={"notification " + this.state.timerColor}>
-                    <span className="subtitle">{this.convertMS(this.state.duration - this.state.prevElapsed - this.state.elapsed)}</span>
+                    <div className="level is-mobile is-paddingless is-marginless">
+                        <div className="level-left">
+                            <div className="level-item">
+                                {block}
+                            </div>
+                        </div>
+                        <div className="level-right">
+                            <div className="level-item">
+                                <button onClick={this.editTime} className="button is-primary is-inverted is-outlined">
+                                    <span className="icon">
+                                        <i className="fas fa-edit"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <nav className="level is-mobile">
                     <div className="level-left">
@@ -126,7 +201,7 @@ class Timer extends React.Component {
                         </div>
                     </div>
                 </nav>
-            </Container>
+            </Container >
         )
     }
 }
@@ -319,8 +394,8 @@ class App extends React.Component {
     }
 
     clearAllItems() {
-        if(window.confirm('... u sure?'))
-        this.setState({ items: [] });
+        if (window.confirm('... u sure?'))
+            this.setState({ items: [] });
     }
 
     removeItem(toRemove) {
