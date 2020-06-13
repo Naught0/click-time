@@ -135,11 +135,11 @@ class Timer extends React.Component {
         return (
             <div className="container">
                 <p className="help">hours</p>
-                <input onChange={hoursChange} defaultValue="0" min="0" type="number" className="box is-size-6" />
+                <input onChange={hoursChange} defaultValue="0" min="0" type="number" className="input" style={{width: 100 + '%'}} />
                 <p className="help">minutes</p>
-                <input onChange={minutesChange} defaultValue="0" min="0" type="number" className="box is-size-6" />
+                <input onChange={minutesChange} defaultValue="0" min="0" type="number" className="input" />
                 <p className="help">seconds</p>
-                <input onChange={secondsChange} defaultValue="30" min="0" type="number" className="box is-size-6" />
+                <input onChange={secondsChange} defaultValue="30" min="0" type="number" className="input" />
             </div>
         )
     }
@@ -429,7 +429,7 @@ class App extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <section className="hero is-dark is-fullheight is-bold">
+                <section className="hero is-dark is-fullheight is-light">
                     <div className="hero-head">
                         <nav className="navbar is-spaced is-primary">
                             <div className="navbar-brand">
@@ -484,11 +484,15 @@ class App extends React.Component {
                     </div>
                 </section >
                 <footer className="footer has-text-grey-light has-background-grey-dark">
-                    <div className="container has-text-centered">
+                    <div className="container has-text-centered is-size-7">
                         <p>
-                            made with ☕ by <a className="has-text-primary" href="https://github.com/Naught0">james</a>
+                            made with 🍆 by <a className="has-text-primary" href="https://github.com/Naught0">james</a>
                         </p>
                         <p><a href="https://github.com/Naught0/click-time" className="has-text-primary">source</a></p>
+                        <p>
+                            <span className="has-text-grey">"_______ is broken!"</span>
+                            <span> - I know, but ain't it pretty?</span>
+                        </p>
                     </div>
                 </footer>
 
