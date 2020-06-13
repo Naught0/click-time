@@ -3,11 +3,39 @@
 class Container extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { color: props.color ? props.color : 'is-black' }
+        this.handleColor = this.handleColor.bind(this);
+    }
+
+    handleColor(newColor) {
+        if (newColor == 'is-danger') {
+            this.setState({ xColor: 'is-dark' })
+        }
+        this.setState({ color: newColor, xColor: 'is-danger' });
     }
     render() {
         return (
             <div className="column is-one-third">
-                <div className="notification is-black">
+                <div className={'notification box ' + this.state.color}>
+                    <nav className="level is-mobile">
+                        <div className="level-left">
+                            <p className="level-item"><a onClick={() => this.handleColor('is-link')}><i className="fas fa-circle has-text-link"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-info')}><i className="fas fa-circle has-text-info"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-danger')}><i className="fas fa-circle has-text-danger"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-warning')}><i className="fas fa-circle has-text-warning"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-black')}><i className="fas fa-circle has-text-black"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-dark')}><i className="fas fa-circle has-text-dark"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-light')}><i className="fas fa-circle has-text-light"></i></a></p>
+                        </div>
+
+                        <div className="level-right">
+                            <div className="level-item">
+                                <a onClick={this.props.onDelete}>
+                                    <i className="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
                     {this.props.children}
                 </div>
             </div>
@@ -18,7 +46,7 @@ class Container extends React.Component {
 class Timer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { duration: 31 * 1000, startTime: null, elapsed: 0, prevElapsed: 0, timerName: 'Timer', ticking: false, id: props.componentID, almostDone: false, alerting: false, timerColor: "is-dark" };
+        this.state = { duration: 5 * 60 * 1000, startTime: null, elapsed: 0, prevElapsed: 0, timerName: 'Timer', ticking: false, alerting: false, timerColor: "is-dark" };
         this.updateName = this.updateName.bind(this);
         this.start = this.start.bind(this);
         this.pause = this.pause.bind(this);
@@ -49,7 +77,7 @@ class Timer extends React.Component {
 
     pause() {
         clearInterval(this.timerID);
-        this.setState({ prevElapsed: elapsed, ticking: false, startTime: null });
+        this.setState({ prevElapsed: this.state.elapsed, ticking: false, startTime: null });
         this.setState({ elapsed: 0 });
     }
     clear() {
@@ -59,9 +87,6 @@ class Timer extends React.Component {
 
     tick() {
         this.setState({ elapsed: Date.now() - this.state.startTime });
-        if (this.state.duration - this.state.elapsed < (30 * 1000)) {
-            this.setState({ almostDone: true, timerColor: "is-warning" })
-        }
         if (this.state.duration == this.state.elapsed + this.state.prevElapsed || this.state.duration < this.state.elapsed + this.state.prevElapsed) {
             clearInterval(this.timerID);
             this.setState({ almostDone: false, alerting: true, timerColor: "is-danger" });
@@ -70,7 +95,7 @@ class Timer extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container onDelete={() => this.props.onDelete(this.props.id)}>
                 <div className="field">
                     <div className="control has-icons-left">
                         <input type="text" className="input is-marginless" onChange={this.updateName} value={this.state.timerName} />
@@ -82,17 +107,25 @@ class Timer extends React.Component {
                 <div className={"notification " + this.state.timerColor}>
                     <span className="subtitle">{this.convertMS(this.state.duration - this.state.prevElapsed - this.state.elapsed)}</span>
                 </div>
-                <div className="buttons is-grouped">
-                    <button onClick={this.start} className="button is-rounded is-success">
-                        <span className="icon"><i className="fas fa-play"></i></span>
-                    </button>
-                    <button onClick={this.pause} className="button is-rounded is-warning">
-                        <span className="icon"><i className="fas fa-pause"></i></span>
-                    </button>
-                    <button onClick={this.clear} className="button is-rounded is-outlined is-danger">
-                        <span className="icon"><i className="fas fa-trash"></i></span>
-                    </button>
-                </div>
+                <nav className="level is-mobile">
+                    <div className="level-left">
+                        <div className="buttons level-item has-addons is-grouped">
+                            <button onClick={this.start} className="button is-rounded is-success is-inverted">
+                                <span className="icon"><i className="fas fa-play"></i></span>
+                            </button>
+                            <button onClick={this.pause} className="button is-rounded is-warning is-light is-inverted">
+                                <span className="icon"><i className="fas fa-pause"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="level-right">
+                        <div className="level-item">
+                            <button onClick={this.clear} className="button is-rounded is-danger is-inverted">
+                                <span className="icon"><i className="fas fa-undo"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
             </Container>
         )
     }
@@ -101,7 +134,7 @@ class Timer extends React.Component {
 class ClickCounter extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { counterName: 'Counter', counter: 0, id: props.componentID }
+        this.state = { counterName: 'Counter', counter: 0 }
 
         this.updateCounterName = this.updateCounterName.bind(this);
         this.addCounter = this.addCounter.bind(this);
@@ -125,7 +158,7 @@ class ClickCounter extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container onDelete={() => this.props.onDelete(this.props.id)}>
                 <div className="field">
                     <div className="control has-icons-left">
                         <input type="text" className="input is-marginless " value={this.state.counterName} onChange={this.updateCounterName}>
@@ -142,17 +175,27 @@ class ClickCounter extends React.Component {
                     </span>
                 </div>
 
-                <div className="buttons">
-                    <button className="button is-rounded is-light" onClick={this.addCounter}>
-                        <span className="icon"><i className="fas fa-plus-circle"></i></span>
-                    </button>
-                    <button className="button is-rounded is-light is-outlined" onClick={this.subtractCounter}>
-                        <span className="icon"><i className="fas fa-minus-circle"></i></span>
-                    </button>
-                    <button className="button is-rounded is-outlined is-danger" onClick={this.resetCounter}>
-                        <span className="icon"><i className="fas fa-trash"></i></span>
-                    </button>
-                </div>
+                <nav className="level is-mobile">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div className="buttons is-grouped has-addons">
+                                <button className="button is-rounded is-success is-inverted" onClick={this.addCounter}>
+                                    <span className="icon"><i className="fas fa-plus-circle"></i></span>
+                                </button>
+                                <button className="button is-rounded is-warning is-light is-inverted" onClick={this.subtractCounter}>
+                                    <span className="icon"><i className="fas fa-minus-circle"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="level-right">
+                        <div className="level-item">
+                            <button className="button is-rounded is-danger is-inverted" onClick={this.resetCounter}>
+                                <span className="icon"><i className="fas fa-undo"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
 
             </Container>
         )
@@ -167,7 +210,6 @@ class StopWatch extends React.Component {
             elapsed: 0,
             startTime: null,
             timerName: "Stopwatch",
-            id: props.componentID,
             ticking: false
         }
 
@@ -222,7 +264,7 @@ class StopWatch extends React.Component {
     // GUI stuff
     render() {
         return (
-            <Container>
+            <Container onDelete={() => this.props.onDelete(this.props.id)}>
                 <div className="field">
                     <div className="control has-icons-left">
                         <input type="text" className="input is-marginless " value={this.state.timerName} onChange={this.updateTimerName}>
@@ -239,17 +281,25 @@ class StopWatch extends React.Component {
                     </span>
                 </div>
 
-                <div className="buttons">
-                    <button className="button is-rounded is-success" onClick={this.timerStart}>
-                        <span className="icon"><i className="fas fa-play"></i></span>
-                    </button>
-                    <button className="button is-rounded is-warning" onClick={this.timerStop}>
-                        <span className="icon"><i className="fas fa-stop"></i></span>
-                    </button>
-                    <button className="button is-rounded is-outlined is-danger" onClick={this.timerReset}>
-                        <span className="icon"><i className="fas fa-trash"></i></span>
-                    </button>
-                </div>
+                <nav className="level is-mobile">
+                    <div className="level-left">
+                        <div className="level-item buttons has-addons is-grouped">
+                            <button className="button is-rounded is-success is-inverted" onClick={this.timerStart}>
+                                <span className="icon"><i className="fas fa-play"></i></span>
+                            </button>
+                            <button className="button is-rounded is-warning is-light is-inverted" onClick={this.timerStop}>
+                                <span className="icon"><i className="fas fa-pause"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="level-right">
+                        <div className="level-item">
+                            <button className="button is-rounded is-danger is-inverted" onClick={this.timerReset}>
+                                <span className="icon"><i className="fas fa-undo"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
             </Container>
         )
     }
@@ -262,62 +312,84 @@ class App extends React.Component {
         this.addStopwatch = this.addStopwatch.bind(this);
         this.addCounter = this.addCounter.bind(this);
         this.addTimer = this.addTimer.bind(this);
+        this.removeItem = this.removeItem.bind(this);
+        this.clearAllItems = this.clearAllItems.bind(this);
+
+        this.id = 0;
+    }
+
+    clearAllItems() {
+        if(window.confirm('... u sure?'))
+        this.setState({ items: [] });
+    }
+
+    removeItem(toRemove) {
+        this.setState({ items: this.state.items.filter(i => i.id !== toRemove) })
     }
 
     addStopwatch() {
+        const id = this.id++;
         this.setState({
-            items: this.state.items.concat(<StopWatch componentID={this.state.items.length}></StopWatch>)
+            items: this.state.items.concat({ obj: <StopWatch onDelete={this.removeItem} key={id} id={id}></StopWatch>, id: id })
         })
     }
     addCounter() {
+        const id = this.id++;
         this.setState({
-            items: this.state.items.concat(<ClickCounter componentID={this.state.items.length}></ClickCounter>)
+            items: this.state.items.concat({ obj: <ClickCounter onDelete={this.removeItem} key={id} id={id}></ClickCounter>, id: id })
         })
     }
     addTimer() {
+        const id = this.id++;
         this.setState({
-            items: this.state.items.concat(<Timer componentID={this.state.items.length}></Timer>)
+            items: this.state.items.concat({ obj: <Timer onDelete={this.removeItem} key={id} id={id}></Timer>, id: id })
         })
+    }
+
+    toggleBurger(event) {
+        event.target.classList.toggle('is-active');
+        document.getElementById('navMenu').classList.toggle('is-active');
     }
 
     render() {
         return (
             <React.Fragment>
-                <section className="hero is-dark is-fullheight">
+                <section className="hero is-dark is-fullheight is-bold">
                     <div className="hero-head">
-                        <nav className="navbar is-dark">
-                            <div className="container">
-                                <div className="navbar-brand">
-                                    <div className="navbar-item has-text-primary">
-                                        <span className="icon"><i className="fas fa-mouse"></i></span>
-                                        <span className="subtitle has-text-weight-light">ClickTime</span>
-                                    </div>
+                        <nav className="navbar is-spaced is-primary">
+                            <div className="navbar-brand">
+                                <div className="navbar-item has-text-grey">
+                                    <span className="icon is-large"><i className="fas fa-mouse-pointer fa-2x"></i></span>
+                                    <span className="subtitle has-text-weight-light is-3">ClickTime</span>
                                 </div>
-                                <div className="navbar-menu">
-                                    <div className="navbar-end">
-                                        <div className="navbar-item has-dropdown is-hoverable">
-                                            <a href="" className="navbar-link">
-                                                <span className="icon"><i className="fas fa-plus"></i></span>
-                                            </a>
-
-                                            <div className="navbar-dropdown is-right is-dark has-background-dark">
-                                                <a onClick={this.addTimer} className="navbar-item">
-                                                    <span className="icon"><i className="fas fa-clock"></i></span>
-                                                    <span>Add timer</span>
-                                                </a>
-                                                <a onClick={this.addStopwatch} className="navbar-item">
-                                                    <span className="icon"><i className="fas fa-stopwatch"></i></span>
-                                                    <span>Add stopwatch</span>
-                                                </a>
-                                                <a onClick={this.addCounter} className="navbar-item">
-                                                    <span className="icon">
-                                                        <i className="fas fa-plus-circle"></i>
-                                                    </span>
-                                                    <span>Add counter</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <a role="button" className="navbar-burger" onClick={this.toggleBurger} data-target="navMenu" aria-label="menu" aria-expanded="false">
+                                    <span aria-hidden="true"></span>
+                                    <span aria-hidden="true"></span>
+                                    <span aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <div className="navbar-menu" id="navMenu">
+                                <div className="navbar-start">
+                                    <a onClick={this.addTimer} className="navbar-item">
+                                        <span className="icon"><i className="fas fa-clock"></i></span>
+                                        <span>Add timer</span>
+                                    </a>
+                                    <a onClick={this.addStopwatch} className="navbar-item">
+                                        <span className="icon"><i className="fas fa-stopwatch"></i></span>
+                                        <span>Add stopwatch</span>
+                                    </a>
+                                    <a onClick={this.addCounter} className="navbar-item">
+                                        <span className="icon"><i className="fas fa-plus-circle"></i></span>
+                                        <span>Add counter</span>
+                                    </a>
+                                </div>
+                                <div className="navbar-end">
+                                    <button onClick={this.clearAllItems} className="button is-outlined is-inverted is-rounded is-danger">
+                                        <span className="icon">
+                                            <i className="fas fa-bomb"></i>
+                                        </span>
+                                        <span>Clear all</span>
+                                    </button>
                                 </div>
                             </div>
                         </nav>
@@ -325,16 +397,23 @@ class App extends React.Component {
                     <div className="hero-body">
                         <div className="container">
                             <div className="columns is-multiline">
-                                {this.state.items}
+                                {
+                                    this.state.items.length > 0
+                                        ? this.state.items.map(item => item.obj)
+                                        : <div className="container">
+                                            <p className="title has-text-weight-light has-text-grey-light">Add items with the above menu</p><p className="subtitle has-text-weight-light has-text-grey-light">Click the colors to change the color. Click the <span className="icon has-text-danger"><i className="fas fa-times"></i></span> to close a component</p>
+                                        </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </section >
-                <footer className="footer">
+                <footer className="footer has-text-grey-light has-background-grey-dark">
                     <div className="container has-text-centered">
                         <p>
-                            made with ☕ by <a href="https://github.com/Naught0">me</a>
+                            made with ☕ by <a className="has-text-primary" href="https://github.com/Naught0">james</a>
                         </p>
+                        <p><a href="https://github.com/Naught0/click-time" className="has-text-primary">source</a></p>
                     </div>
                 </footer>
 
