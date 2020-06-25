@@ -16,7 +16,7 @@ class Container extends React.Component {
 
     render() {
         return (
-            <div className="column is-one-third">
+            <div className="column is-one-third-widescreen is-one-third-fullhd is-half-desktop is-half-tablet">
                 <div className={'notification box ' + this.state.color}>
                     <nav className="level is-mobile">
                         <div className="level-left">
@@ -28,6 +28,7 @@ class Container extends React.Component {
                             <p className="level-item"><a onClick={() => this.handleColor('is-black')}><i className="fas fa-circle has-text-black"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-dark')}><i className="fas fa-circle has-text-dark"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-light')}><i className="fas fa-circle has-text-light"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-primary')}><i className="fas fa-circle has-text-primary"></i></a></p>
                         </div>
 
                         <div className="level-right">
@@ -135,7 +136,7 @@ class Timer extends React.Component {
         return (
             <div className="container">
                 <p className="help">hours</p>
-                <input onChange={hoursChange} defaultValue="0" min="0" type="number" className="input" style={{width: 100 + '%'}} />
+                <input onChange={hoursChange} defaultValue="0" min="0" type="number" className="input" style={{ width: 100 + '%' }} />
                 <p className="help">minutes</p>
                 <input onChange={minutesChange} defaultValue="0" min="0" type="number" className="input" />
                 <p className="help">seconds</p>
