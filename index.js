@@ -22,13 +22,13 @@ class Container extends React.Component {
                         <div className="level-left">
                             <p className="level-item"><a onClick={() => this.handleColor('is-link')}><i className="fas fa-circle has-text-link"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-info')}><i className="fas fa-circle has-text-info"></i></a></p>
+                            <p className="level-item"><a onClick={() => this.handleColor('is-primary')}><i className="fas fa-circle has-text-primary"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-success')}><i className="fas fa-circle has-text-success"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-danger')}><i className="fas fa-circle has-text-danger"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-warning')}><i className="fas fa-circle has-text-warning"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-black')}><i className="fas fa-circle has-text-black"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-dark')}><i className="fas fa-circle has-text-dark"></i></a></p>
                             <p className="level-item"><a onClick={() => this.handleColor('is-light')}><i className="fas fa-circle has-text-light"></i></a></p>
-                            <p className="level-item"><a onClick={() => this.handleColor('is-primary')}><i className="fas fa-circle has-text-primary"></i></a></p>
                         </div>
 
                         <div className="level-right">
